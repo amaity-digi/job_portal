@@ -1,9 +1,21 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { CarouselContent, CarouselItem, Carousel } from "@/components/ui/carousel";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  CarouselContent,
+  CarouselItem,
+  Carousel,
+} from "@/components/ui/carousel";
 import { Link } from "react-router-dom";
-import companies from '../data/companies.json'
+import Autoplay from "embla-carousel-autoplay";
+import companies from "../data/companies.json";
+import faq from "../data/faq.json";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Landing = () => {
   return (
@@ -26,32 +38,71 @@ const Landing = () => {
       </section>
       <div className="flex gap-6 justify-center">
         <Link to="/jobs">
-          <Button variant="blue" size="xl">Find Jobs</Button>
+          <Button variant="blue" size="xl">
+            Find Jobs
+          </Button>
         </Link>
         <Link to="/post-job">
-          <Button variant="destructive" size="xl">Post Jobs</Button>
+          <Button variant="destructive" size="xl">
+            Post Jobs
+          </Button>
         </Link>
       </div>
 
       <Carousel
-     
-      className="w-full py-10"
-    >
-      <CarouselContent>
-        {companies?.map(({name, id, path}) => {
-          return(
-            <CarouselItem key={id}>
-              <img src={path} alt={name}/>
-            </CarouselItem>
-          )
+        plugins={[
+          Autoplay({
+            delay: 2000,
+          }),
+        ]}
+        className="w-full py-10"
+      >
+        <CarouselContent className="flex gap-5 sm:gap-20 items-center">
+          {companies?.map(({ name, id, path }) => {
+            return (
+              <CarouselItem key={id} className="basis-1/3 lg:basis-1/6">
+                <img
+                  className="h-9 sm:h-14 object-contain"
+                  src={path}
+                  alt={name}
+                />
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+      </Carousel>
+
+      <img src="/banner.jpeg" className="w-full" />
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>For Job Seekers</CardTitle>
+          </CardHeader>
+          <CardContent>
+            Search and apply for jobs, track applications, and more.
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>For Employers</CardTitle>
+          </CardHeader>
+          <CardContent>
+            Post jobs, manage applications, and find the best candidates.
+          </CardContent>
+        </Card>
+      </section>
+
+      <Accordion type="single" collapsible>
+        {faq?.map((item, index) => {
+          return (
+            <AccordionItem value={`${index + 1}`}>
+              <AccordionTrigger>{item?.question}</AccordionTrigger>
+              <AccordionContent>{item?.answer}</AccordionContent>
+            </AccordionItem>
+          );
         })}
-      </CarouselContent>
-    </Carousel>
-      {/* banner */}
-
-      <section>{/* cards */}</section>
-
-      {/* Accordion */}
+      </Accordion>
     </main>
   );
 };
