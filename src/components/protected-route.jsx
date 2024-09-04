@@ -1,15 +1,23 @@
-import React from 'react'
-import { useUser } from '@clerk/clerk-react'
-import { Navigate, useLocation } from 'react-router-dom';
+import React from "react";
+import { useUser } from "@clerk/clerk-react";
+import { Navigate, useLocation } from "react-router-dom";
 
-const ProtectedRoute = ({children}) => {
-    const {isSignedIn, user, isLoaded} = useUser();
-    const {pathName} = useLocation();
-   
-    if(isLoaded && !isSignedIn && isSignedIn !== undefined){
-        return <Navigate to='/?sign-in=true' />
-    }
+const ProtectedRoute = ({ children }) => {
+  const { isSignedIn, user, isLoaded } = useUser();
+  const { pathName } = useLocation();
+
+  if (isLoaded && !isSignedIn && isSignedIn !== undefined) {
+    return <Navigate to="/?sign-in=true" />;
+  }
+
+  if (
+    user !== undefined &&
+    !user?.unsafeMetadata?.role &&
+    pathName !== "onboarding"
+  )
+    return <Navigate to="onboarding" />;
+
   return children;
-}
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;
